@@ -14,10 +14,10 @@ TEST_CASE("Test de l'objet Personne","Person"){
     REQUIRE(person.hasValidPhoneNumber(person.PhoneNbr)==true);
 
     person.PhoneNbr="1636757575";
-    REQUIRE_FALSE(person.hasValidPhoneNumber(person.hasValidPhoneNumber)==true);
+    REQUIRE_FALSE(person.hasValidPhoneNumber(person.PhoneNbr)==true);
 
     person.PhoneNbr="636757575";
-    REQUIRE_FALSE(person.hasValidPhoneNumber(person.hasValidPhoneNumber)==true);
+    REQUIRE_FALSE(person.hasValidPhoneNumber(person.PhoneNbr)==true);
 
     person.Name = "Adrien";
     REQUIRE(person.hasValidName(person.Name)==true);
