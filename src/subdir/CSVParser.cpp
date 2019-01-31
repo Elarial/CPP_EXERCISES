@@ -1,13 +1,12 @@
 /**
- *  @file   MyClass.cpp
- *  @brief  Demo source for C++ project template.
+ *  @file   CSVParser.cpp
+ *  @brief  Source file of the csv parser.
  */
 #include "CSVParser.hpp"
 
 
 
 
-/* ########################################################################## */
 /* ########################################################################## */
 bool CSVParser::initWithFile(std::string chemin_fichier){
     this->filepath = chemin_fichier;
@@ -19,5 +18,4 @@ bool CSVParser::initWithFile(std::string chemin_fichier){
     }
     return true;
 }
-/* ########################################################################## */
 /* ########################################################################## */

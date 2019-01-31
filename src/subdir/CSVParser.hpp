@@ -8,12 +8,13 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 struct CSVParser{
     std::string filepath;
     int numberOfColumns;
     int numberOfRows;
-    std::string header[];
+    std::vector<std::string> header;
     bool initWithFile(std::string path);
 };
 
