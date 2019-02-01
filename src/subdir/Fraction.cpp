@@ -5,7 +5,6 @@
 
 #include "Fraction.hpp"
 /* ########################################################################## */
-
 std::string Fraction::display (){
     std::string s = std::to_string(this->numerator)+"/"+std::to_string(this->denominator);
     return s;
@@ -62,12 +61,24 @@ Fraction Fraction::operator+(const Fraction a) {
     return fraction;
                       
 }
-
 Fraction Fraction::operator+(int i) {
-   //Mistake here
-    Fraction iFrac(i,i);
+    Fraction iFrac(i*this->denominator,this->denominator);
     Fraction fraction = *this + iFrac;
     return fraction;
 }
-
+bool Fraction::operator > (const Fraction a){
+    if (this->numerator * a.denominator > this->denominator * a.numerator)
+        return true;
+    return false;
+}
+bool Fraction::operator < (const Fraction a){
+    if (this->numerator * a.denominator < this->denominator * a.numerator)
+        return true;
+    return false;
+}
+bool Fraction::operator== (const Fraction a){
+    if(!(*this > a) && !(*this < a))
+        return true;
+    return false;
+}
 /* ########################################################################## */

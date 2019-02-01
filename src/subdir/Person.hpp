@@ -7,14 +7,18 @@
 #include <string>
 #include <locale>
 #include <algorithm>
+#include "Fraction.hpp"
 
 struct Person{
-    std::string Name;
+    std::string FirstName;
+    std::string LastName;
     std::string PhoneNbr;
-    std::string Answers;
-    std::string Names;
-    bool hasValidPhoneNumber(std::string number);
-    bool hasValidName(std::string name);
+    Fraction Answer;
+    bool hasValidPhoneNumber();
+    bool hasValidNames();
+    int getNumberOfPositiveResponses();
+    int getNumberOfGivenResponses();
 };
+bool stringIsAlpha(std::string s);
 
 #endif /*< PERSON_HPP */

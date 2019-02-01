@@ -16,6 +16,9 @@ struct Fraction
     Fraction(int num=1,int den=1);
     Fraction operator+ (int i);
     Fraction operator+ (const Fraction a);
+    bool operator> (const Fraction a);
+    bool operator< (const Fraction a);
+    bool operator== (const Fraction a);
     int gcd (int a,int b);
 };
 
