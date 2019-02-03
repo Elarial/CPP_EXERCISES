@@ -28,6 +28,10 @@ TEST_CASE("Test de l'objet Personne","Person"){
 
     person.LastName = "";
     REQUIRE_FALSE(person.hasValidNames()==true);
+
+    person.Answer= Fraction(3,4);
+    REQUIRE(person.getNumberOfGivenResponses() == 4);
+    REQUIRE(person.getNumberOfPositiveResponses() == 3);
 }
 
 /* ########################################################################## */
