@@ -112,7 +112,15 @@ std::string** CSVParser::getLineWithLastname(const std::string name){
 Person* CSVParser::getPersonWithLastname(const std::string name){
     std::string **csvItemsArr = create2dArray(this->numberOfRows,this->numberOfColumns);
     Person *person = new Person[this->numberOfRows];
-
+    csvItemsArr = getLineWithLastname(name);
+    for(int i = 0; i < this->numberOfRows; i++)
+    {
+        person[i].FirstName = csvItemsArr[i][firstNameColumn];
+        person[i].Answer = strToFrac(csvItemsArr[i][answerColumn]);
+        person[i].PhoneNbr = csvItemsArr[i][phoneNbrColumn];
+        person[i].LastName = csvItemsArr[i][lastNameColumn];
+    }
+    
 
     //cleaning memory
     for (int h = 0; h < this->numberOfRows; h++)
@@ -121,6 +129,7 @@ Person* CSVParser::getPersonWithLastname(const std::string name){
     }
     delete[] csvItemsArr;
     csvItemsArr = 0;
+    
     return person;
 }
 /* ########################################################################## */

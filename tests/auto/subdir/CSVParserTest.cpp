@@ -53,6 +53,26 @@ TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     REQUIRE(csvItemsArr[3][1] == "0680138353");
     REQUIRE(csvItemsArr[3][2] == "14/15");
     REQUIRE(csvItemsArr[3][3] == "Colombier");
+
+    Person *person = new Person[parser.numberOfRows];
+    person = parser.getPersonWithLastname("Colombier");
+    Fraction fraction0(18,19),fraction1(13,18),fraction2(11,13),fraction3(14,15);
+    REQUIRE(person[0].FirstName == "Florent");
+    REQUIRE(person[0].PhoneNbr == "0434560690");
+    REQUIRE((person[0].Answer == fraction0)==true);
+    REQUIRE(person[0].LastName == "Colombier");
+    REQUIRE(person[1].FirstName == "Jean-Marc");
+    REQUIRE(person[1].PhoneNbr == "0643219401");
+    REQUIRE((person[1].Answer == fraction1)==true);
+    REQUIRE(person[1].LastName == "Colombier");
+    REQUIRE(person[2].FirstName == "Cedric");
+    REQUIRE(person[2].PhoneNbr == "0667836312");
+    REQUIRE((person[2].Answer == fraction2)==true);;
+    REQUIRE(person[2].LastName == "Colombier");
+    REQUIRE(person[3].FirstName == "Thomas");
+    REQUIRE(person[3].PhoneNbr == "0680138353");
+    REQUIRE((person[3].Answer == fraction3)==true);
+    REQUIRE(person[3].LastName == "Colombier");
 }
 
 
