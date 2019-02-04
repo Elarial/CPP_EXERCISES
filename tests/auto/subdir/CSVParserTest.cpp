@@ -10,9 +10,10 @@
 /* ########################################################################## */
 TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     CSVParser parser;
-    
+    parser.numberOfRows = 22;
+    parser.numberOfColumns = 4;
     REQUIRE(parser.initWithFile("../../../src/sondage.csv")==true);
-    std::string *csvItems = new std::string[MAX_COLUMN];
+    std::string *csvItems = new std::string[parser.numberOfColumns];
     csvItems=parser.getLine(1);
     REQUIRE(csvItems[0] == "Prénoms");
     REQUIRE(csvItems[1] == "Numéros de téléphone");
@@ -20,13 +21,38 @@ TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     REQUIRE(csvItems[3] == "Noms");
     
 
-    csvItems = new std::string[MAX_COLUMN];
+    csvItems = new std::string[parser.numberOfColumns];
     csvItems = parser.getLine(2);
     REQUIRE(csvItems[0] == "Bastien");
     REQUIRE(csvItems[1] == "0612345678");
     REQUIRE(csvItems[2] == "4/18");
     REQUIRE(csvItems[3] == "Righi");
-    
+
+    csvItems = new std::string[parser.numberOfColumns]; 
+    csvItems = parser.getLineWithHighestRateOfResponses();
+    REQUIRE(csvItems[0] == "Rémi");
+    REQUIRE(csvItems[1] == "0680737812");
+    REQUIRE(csvItems[2] == "20/20");
+    REQUIRE(csvItems[3] == "Berlioz");
+
+    std::string **csvItemsArr = create2dArray(parser.numberOfRows,parser.numberOfColumns);
+    csvItemsArr = parser.getLineWithLastname("Colombier");
+    REQUIRE(csvItemsArr[0][0] == "Florent");
+    REQUIRE(csvItemsArr[0][1] == "0434560690");
+    REQUIRE(csvItemsArr[0][2] == "18/19");
+    REQUIRE(csvItemsArr[0][3] == "Colombier");
+    REQUIRE(csvItemsArr[1][0] == "Jean-Marc");
+    REQUIRE(csvItemsArr[1][1] == "0643219401");
+    REQUIRE(csvItemsArr[1][2] == "13/18");
+    REQUIRE(csvItemsArr[1][3] == "Colombier");
+    REQUIRE(csvItemsArr[2][0] == "Cedric");
+    REQUIRE(csvItemsArr[2][1] == "0667836312");
+    REQUIRE(csvItemsArr[2][2] == "11/13");
+    REQUIRE(csvItemsArr[2][3] == "Colombier");
+    REQUIRE(csvItemsArr[3][0] == "Thomas");
+    REQUIRE(csvItemsArr[3][1] == "0680138353");
+    REQUIRE(csvItemsArr[3][2] == "14/15");
+    REQUIRE(csvItemsArr[3][3] == "Colombier");
 }
 
 

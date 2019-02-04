@@ -4,25 +4,32 @@
  */
 #ifndef CSVPARSER_HPP
 #define CSVPARSER_HPP
-#define MAX_COLUMN 4
+#define FIRST_DATA_LINE 2
 
-#include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include "Person.hpp"
+
+enum csvColumnsEnum : const int{
+    firstNameColumn = 0,
+    phoneNbrColumn = 1,
+    answerColumn = 2,
+    lastNameColumn = 3
+};
 
 struct CSVParser{
     std::string filepath;
     int numberOfColumns;
     int numberOfRows;
-    std::vector<std::string> header;
+    std::string* header;
     bool initWithFile(std::string path);
     std::string* getLine (int rowNum);
     std::string* getLineWithHighestRateOfResponses();
-    std::string* getLineWithLastname(std::string name);
-    std::string* getPersonWithLastname(std::string name);
+    std::string** getLineWithLastname(const std::string name);
+    Person* getPersonWithLastname(const std::string name);
 };
-
+std::string** create2dArray (const unsigned height,const unsigned width);
 
 #endif /*< CSVPARSER_HPP */
