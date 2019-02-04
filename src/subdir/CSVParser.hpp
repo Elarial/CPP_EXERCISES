@@ -29,6 +29,15 @@ struct CSVParser{
     std::string* getLineWithHighestRateOfResponses();
     std::string** getLineWithLastname(const std::string name);
     Person* getPersonWithLastname(const std::string name);
+    
+    enum sep_t{
+        CSV_COMMA = 0,
+        CSV_SEMICOLON,
+        CSV_TABULATION,
+        CSV_4SPACES
+    };
+
+    sep_t getSeparatorType();
 };
 std::string** create2dArray (const unsigned height,const unsigned width);
 

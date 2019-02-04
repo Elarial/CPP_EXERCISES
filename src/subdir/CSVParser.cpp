@@ -9,6 +9,9 @@ bool CSVParser::initWithFile(std::string path)
 {
     this->filepath = path;
     std::ifstream fichier(path.c_str());
+    std::string s;
+    this->numberOfRows = 0;
+    this->numberOfColumns = 0;
 
     if (!fichier.good())
     {
@@ -16,6 +19,23 @@ bool CSVParser::initWithFile(std::string path)
         fichier.close();
         return false;
     }
+    
+    std::getline(fichier,s);
+    std::istringstream myLine(s);
+    while (std::getline(myLine,s,',')){
+        this->numberOfColumns++;
+    }
+    this->header = new std::string[this->numberOfColumns];
+    myLine.clear();
+    myLine.seekg(0);
+    for(int i = 0; i < this->numberOfColumns; i++)
+    {
+        std::getline(myLine, this->header[i], ',');
+    }
+    while(std::getline(fichier,s)){
+        this->numberOfRows++;
+    }
+    
     fichier.close();
     return true;
 }
@@ -131,5 +151,9 @@ Person* CSVParser::getPersonWithLastname(const std::string name){
     csvItemsArr = 0;
     
     return person;
+}
+
+CSVParser::sep_t CSVParser::getSeparatorType(){
+
 }
 /* ########################################################################## */

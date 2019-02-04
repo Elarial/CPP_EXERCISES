@@ -10,9 +10,14 @@
 /* ########################################################################## */
 TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     CSVParser parser;
-    parser.numberOfRows = 22;
-    parser.numberOfColumns = 4;
     REQUIRE(parser.initWithFile("../../../src/sondage.csv")==true);
+    REQUIRE(parser.numberOfRows == 20);
+    REQUIRE(parser.numberOfColumns == 4);
+    REQUIRE(parser.header[0]=="Prénoms");
+    REQUIRE(parser.header[1]=="Numéros de téléphone");
+    REQUIRE(parser.header[2]=="Réponses");
+    REQUIRE(parser.header[3]=="Noms");
+    
     std::string *csvItems = new std::string[parser.numberOfColumns];
     csvItems=parser.getLine(1);
     REQUIRE(csvItems[0] == "Prénoms");
