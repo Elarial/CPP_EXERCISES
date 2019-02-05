@@ -17,29 +17,42 @@ TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     REQUIRE(parser.header[1]=="Numéros de téléphone");
     REQUIRE(parser.header[2]=="Réponses");
     REQUIRE(parser.header[3]=="Noms");
-    
+}
+
+TEST_CASE("Test de la fonction getline","[getline]"){
+    CSVParser parser;
+    parser.initWithFile("../../../src/sondage.csv");
+
     std::string *csvItems = new std::string[parser.numberOfColumns];
     csvItems=parser.getLine(1);
-    REQUIRE(csvItems[0] == "Prénoms");
-    REQUIRE(csvItems[1] == "Numéros de téléphone");
-    REQUIRE(csvItems[2] == "Réponses");
-    REQUIRE(csvItems[3] == "Noms");
-    
-
-    csvItems = new std::string[parser.numberOfColumns];
-    csvItems = parser.getLine(2);
     REQUIRE(csvItems[0] == "Bastien");
     REQUIRE(csvItems[1] == "0612345678");
     REQUIRE(csvItems[2] == "4/18");
     REQUIRE(csvItems[3] == "Righi");
 
-    csvItems = new std::string[parser.numberOfColumns]; 
+
+    csvItems = new std::string[parser.numberOfColumns];
+    csvItems = parser.getLine(2);
+    REQUIRE(csvItems[0] == "Brandon");
+    REQUIRE(csvItems[1] == "0656780612");
+    REQUIRE(csvItems[2] == "12/18");
+    REQUIRE(csvItems[3] == "Righi");
+}
+
+TEST_CASE("Test de la fonction getLineWithHighestRateOfResponses","[getLineWithHighestRateOfResponses]"){
+    CSVParser parser;
+    parser.initWithFile("../../../src/sondage.csv");
+    std::string *csvItems = new std::string[parser.numberOfColumns]; 
     csvItems = parser.getLineWithHighestRateOfResponses();
     REQUIRE(csvItems[0] == "Rémi");
     REQUIRE(csvItems[1] == "0680737812");
     REQUIRE(csvItems[2] == "20/20");
     REQUIRE(csvItems[3] == "Berlioz");
-
+}
+    
+TEST_CASE("Test de la fonction getLineWithLastName","[getLineWithLastName]"){
+    CSVParser parser;
+    parser.initWithFile("../../../src/sondage.csv");
     std::string **csvItemsArr = create2dArray(parser.numberOfRows,parser.numberOfColumns);
     csvItemsArr = parser.getLineWithLastname("Colombier");
     REQUIRE(csvItemsArr[0][0] == "Florent");
@@ -58,7 +71,11 @@ TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     REQUIRE(csvItemsArr[3][1] == "0680138353");
     REQUIRE(csvItemsArr[3][2] == "14/15");
     REQUIRE(csvItemsArr[3][3] == "Colombier");
+}
 
+TEST_CASE("Test de la fonction getPersonWithLastname","[getPersonWithLastname]"){
+    CSVParser parser;
+    parser.initWithFile("../../../src/sondage.csv");
     Person *person = new Person[parser.numberOfRows];
     person = parser.getPersonWithLastname("Colombier");
     Fraction fraction0(18,19),fraction1(13,18),fraction2(11,13),fraction3(14,15);
@@ -78,6 +95,18 @@ TEST_CASE("Test de l'overture du fichier","[OpenFile]"){
     REQUIRE(person[3].PhoneNbr == "0680138353");
     REQUIRE((person[3].Answer == fraction3)==true);
     REQUIRE(person[3].LastName == "Colombier");
+}
+    
+TEST_CASE("Test de la fonction getSeparatorType","[getSeparatorType]"){
+    CSVParser parser;
+    parser.initWithFile("../../../src/sondage.csv");
+    REQUIRE(parser.getSeparatorType() == CSVParser::CSV_COMMA);
+    parser.initWithFile("../../../src/sondage_semicolon.csv");
+    REQUIRE(parser.getSeparatorType() == CSVParser::CSV_SEMICOLON);
+    parser.initWithFile("../../../src/sondage_tabulation.csv");
+    REQUIRE(parser.getSeparatorType() == CSVParser::CSV_TABULATION);
+    parser.initWithFile("../../../src/sondage_4spaces.csv");
+    REQUIRE(parser.getSeparatorType() == CSVParser::CSV_4SPACES);
 }
 
 

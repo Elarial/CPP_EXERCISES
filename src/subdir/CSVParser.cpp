@@ -13,6 +13,23 @@ bool CSVParser::initWithFile(std::string path)
     this->numberOfRows = 0;
     this->numberOfColumns = 0;
 
+    switch (this->getSeparatorType())
+    {
+        case CSV_COMMA:
+            this->separator=',';
+            break;
+        case CSV_SEMICOLON:
+            this->separator=';';
+            break;
+        case CSV_TABULATION:
+            this->separator = '\t';
+            break;
+        case CSV_4SPACES:
+            this->separator = ' ';
+            break;        
+        default:
+            break;
+    }
     if (!fichier.good())
     {
         std::cerr << "Une erreur est survenue lors de l'ouverture du fichier " + path << std::endl;
@@ -22,7 +39,7 @@ bool CSVParser::initWithFile(std::string path)
     
     std::getline(fichier,s);
     std::istringstream myLine(s);
-    while (std::getline(myLine,s,',')){
+    while (std::getline(myLine,s,this->separator)){
         this->numberOfColumns++;
     }
     this->header = new std::string[this->numberOfColumns];
@@ -30,7 +47,7 @@ bool CSVParser::initWithFile(std::string path)
     myLine.seekg(0);
     for(int i = 0; i < this->numberOfColumns; i++)
     {
-        std::getline(myLine, this->header[i], ',');
+        std::getline(myLine, this->header[i], this->separator);
     }
     while(std::getline(fichier,s)){
         this->numberOfRows++;
@@ -43,6 +60,10 @@ bool CSVParser::initWithFile(std::string path)
 
 std::string* CSVParser::getLine(int rowNum)
 {
+    if (rowNum > this -> numberOfRows){
+        std::cerr << "L'argument rowNum =" << rowNum << "est superieur au nombre de lignes =" << this -> numberOfRows << std::endl;
+        return NULL;
+    }
     std::string *csvItems = new std::string[this->numberOfColumns];
     int lineNumber = 0;
     std::string line;
@@ -50,21 +71,21 @@ std::string* CSVParser::getLine(int rowNum)
 
     if (fichier.is_open())
     {
-        //todo : for loop limiting to numberOfRows iterations.
+        
+        std::getline(fichier, line); // Cursor position after header.
         while (std::getline(fichier, line))
         {
-            lineNumber++;
-            if (lineNumber == rowNum)
+            if (lineNumber+1 == rowNum)
             {
                 std::istringstream myLine(line);
                 for (int i = 0; i < this->numberOfColumns; i++)
                 {
-                    std::getline(myLine, csvItems[i], ',');
+                    std::getline(myLine, csvItems[i], this->separator);
                 }
                 fichier.close();
                 return csvItems;
             }
-            
+            lineNumber++;
         }
         std::cerr << "Impossible de trouver la ligne " << rowNum << std::endl;
         fichier.close();
@@ -78,20 +99,20 @@ std::string* CSVParser::getLine(int rowNum)
 //todo manage case where 2 or more lines have highestRate.
 std::string* CSVParser::getLineWithHighestRateOfResponses(){
 
-    int ctr = FIRST_DATA_LINE,highestIndex = 0;
+    int highestIndex = 0;
     Fraction highestFrac(0,1),tmpFrac(0,1);
     std::string *csvItems = new std::string[this->numberOfColumns];
 
-    while(this->getLine(ctr)){
-        csvItems = this->getLine(ctr);
+    for (int i = 1; i <= this->numberOfRows; i++)
+    {
+        csvItems = this->getLine(i);
         tmpFrac = strToFrac(csvItems[answerColumn]);
-
         if(tmpFrac > highestFrac){
             highestFrac = tmpFrac;
-            highestIndex = ctr;
+            highestIndex = i;
         }
-        ctr++;
     }
+
     return this -> getLine (highestIndex);
 
 }
@@ -116,24 +137,28 @@ std::string** CSVParser::getLineWithLastname(const std::string name){
 
     std::string **csvItemsArr = create2dArray(this->numberOfRows,this->numberOfColumns);
     std::string *csvItems = new std::string[this->numberOfColumns];
-    int ctr = FIRST_DATA_LINE,rowIndex = 0;
+    int rowIndex = 0;
 
-    while(this->getLine(ctr)){
-        csvItems = this->getLine(ctr);
+    for(int i = 1; i <= this->numberOfRows; i++)
+    {
+       csvItems = this->getLine(i);
         if(csvItems[lastNameColumn] == name){
             csvItemsArr[rowIndex]=csvItems;
             rowIndex++;
+            
         }
-        ctr++;
+        
     }
+    this->collectionSize = rowIndex;
     return csvItemsArr;
     
 }
 Person* CSVParser::getPersonWithLastname(const std::string name){
     std::string **csvItemsArr = create2dArray(this->numberOfRows,this->numberOfColumns);
-    Person *person = new Person[this->numberOfRows];
     csvItemsArr = getLineWithLastname(name);
-    for(int i = 0; i < this->numberOfRows; i++)
+    Person *person = new Person[this->collectionSize];
+
+    for(int i = 0; i < this->collectionSize; i++)
     {
         person[i].FirstName = csvItemsArr[i][firstNameColumn];
         person[i].Answer = strToFrac(csvItemsArr[i][answerColumn]);
@@ -154,6 +179,17 @@ Person* CSVParser::getPersonWithLastname(const std::string name){
 }
 
 CSVParser::sep_t CSVParser::getSeparatorType(){
-
+    std::string separators[] {",",";","\t","    "};
+    std::string line;
+    std::ifstream fichier(this->filepath);
+    std::getline(fichier,line);
+    for(size_t i = 0; i < 4; i++)
+    {
+        if(line.find(separators[i]) != std::string::npos){
+            return (sep_t)i;
+        }
+    }
+    std::cerr << "Aucun séparateur trouvé dans le fichier, la virgule sera utilisé par défaut" << std::endl;
+    return CSV_COMMA;
 }
 /* ########################################################################## */

@@ -1,6 +1,6 @@
 /**
  *  @file   CSVParser.hpp
- *  @brief  A simple csv parser.
+ *  @brief  A not so simple csv parser.
  */
 #ifndef CSVPARSER_HPP
 #define CSVPARSER_HPP
@@ -20,10 +20,12 @@ enum csvColumnsEnum : const int{
 };
 
 struct CSVParser{
-    std::string filepath;
-    int numberOfColumns;
-    int numberOfRows;
+    std::string filepath ="";
+    int numberOfColumns = 0;
+    int numberOfRows = 0;
+    char separator;
     std::string* header;
+    int collectionSize = 0;
     bool initWithFile(std::string path);
     std::string* getLine (int rowNum);
     std::string* getLineWithHighestRateOfResponses();
